@@ -245,17 +245,13 @@ module Cequel
         @default_consistency || :quorum
       end
 
+      def release_versions
+        cluster.hosts.collect(&:release_version).uniq
+      end
+
       # @return [Boolean] true if the keyspace exists
       def exists?
-        statement = <<-CQL
-          SELECT keyspace_name
-          FROM system_schema.keyspaces
-          WHERE keyspace_name = ?
-        CQL
-
-        log('CQL', statement, [name]) do
-          client_without_keyspace.execute(sanitize(statement, [name])).any?
-        end
+        cluster.has_keyspace? name
       end
 
       private
