@@ -70,7 +70,7 @@ module Cequel
       end
 
       def self.port
-        ENV['CEQUEL_TEST_PORT'] || '9042'
+        ENV['CEQUEL_TEST_PORT'].to_i || 9042
       end
 
       def self.legacy_host

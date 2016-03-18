@@ -196,8 +196,11 @@ describe Cequel::Metal::DataSet do
         row_keys.merge(categories: ['Big Data', 'Cassandra']))
       cequel[:posts].where(row_keys).
         list_prepend(:categories, ['Scalability', 'Partition Tolerance'])
-      expect(cequel[:posts].where(row_keys).first[:categories]).to eq(
-        ['Partition Tolerance', 'Scalability', 'Big Data', 'Cassandra']
+      expect(cequel[:posts].where(row_keys).first[:categories].first(2)).to include(
+        'Partition Tolerance', 'Scalability'
+      )
+      expect(cequel[:posts].where(row_keys).first[:categories].last(2)).to eq(
+        ['Big Data', 'Cassandra']
       )
     end
   end
