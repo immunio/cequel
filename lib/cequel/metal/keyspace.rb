@@ -258,6 +258,12 @@ module Cequel
         end
       end
 
+      #
+      # @return [String] Cassandra version number from the first host
+      def release_version
+        cluster.hosts.collect(&:release_version).first
+      end
+
       private
 
       attr_reader :lock

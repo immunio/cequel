@@ -43,11 +43,11 @@ module Cequel
     #
     #   # Collection is lazily read from the database, and then staged
     #   # modifications are made to the loaded collection
-    #   puts blog.categories.join(', ') 
+    #   puts blog.categories.join(', ')
     #
     #   # Issues an UPDATE statement which prepends "Distributed Data" onto the
     #   # collection
-    #   blog.save! 
+    #   blog.save!
     #
     # @since 1.0.0
     #
@@ -331,8 +331,8 @@ module Cequel
       # @return [List] self
       #
       def unshift(*objects)
-        objects.map!(&method(:cast_element))
-        to_update { updater.list_prepend(column_name, objects.reverse) }
+        objects.map! { |object| cast_element(object) }
+        to_update { updater.list_prepend(column_name, objects) }
         to_modify { super }
       end
       alias_method :prepend, :unshift

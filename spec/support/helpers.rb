@@ -139,6 +139,15 @@ module Cequel
         expect(cequel.client).to have_received(:execute).
           with(matcher, hash_including(:consistency => consistency))
       end
+
+      # checks if we're testing against cassandra with the fix for
+      # CASSANDRA-8733. This fix has been applied from 2.1.3 and  backported
+      # to the 2.0 series from 2.0.13
+      def has_cassandra_8733_fix
+         Gem::Version.new(cequel.release_version) >= Gem::Version.new('2.1.3') ||
+         Gem::Dependency.new('', '~> 2.0.13').match?('', cequel.release_version)
+      end
+
     end
   end
 end

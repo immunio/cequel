@@ -6,6 +6,7 @@ describe Cequel::Schema::Keyspace do
     Cequel.connect(config)
   end
   let(:keyspace) { connection.schema }
+  let(:release_version) { connection.release_version }
 
   describe 'creating keyspace' do
     before do

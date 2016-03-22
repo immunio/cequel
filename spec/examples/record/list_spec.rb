@@ -426,8 +426,13 @@ describe Cequel::Record::List do
       scope.list_prepend(:tags, 'zero')
       post.tags.unshift('minustwo', 'minusone')
       post.save
-      expect(subject[:tags]).to eq(%w(minustwo minusone zero one two))
-      expect(post.tags).to eq(%w(minustwo minusone one two))
+      if has_cassandra_8733_fix
+        expect(subject[:tags]).to eq(%w(minustwo minusone zero one two))
+        expect(post.tags).to eq(%w(minustwo minusone one two))
+      else
+        expect(subject[:tags]).to eq(%w(minusone minustwo zero one two))
+        expect(post.tags.to_a).to eq(%w(minustwo minusone one two))
+      end
     end
 
     it 'should cast element before unshifting' do
@@ -443,7 +448,11 @@ describe Cequel::Record::List do
     it 'should persist unloaded unshift' do
       unloaded_post.tags.unshift('minustwo', 'minusone')
       unloaded_post.save
-      expect(subject[:tags]).to eq(%w(minustwo minusone one two))
+      if has_cassandra_8733_fix
+        expect(subject[:tags]).to eq(%w(minustwo minusone one two))
+      else
+        expect(subject[:tags]).to eq(%w(minusone minustwo one two))
+      end
     end
 
     it 'should apply unshift after the fact' do

@@ -196,9 +196,16 @@ describe Cequel::Metal::DataSet do
         row_keys.merge(categories: ['Big Data', 'Cassandra']))
       cequel[:posts].where(row_keys).
         list_prepend(:categories, ['Scalability', 'Partition Tolerance'])
-      expect(cequel[:posts].where(row_keys).first[:categories]).to eq(
-        ['Partition Tolerance', 'Scalability', 'Big Data', 'Cassandra']
-      )
+
+      if has_cassandra_8733_fix
+        expect(cequel[:posts].where(row_keys).first[:categories]).to eq(
+          ['Scalability', 'Partition Tolerance', 'Big Data', 'Cassandra']
+        )
+      else
+        expect(cequel[:posts].where(row_keys).first[:categories]).to eq(
+          ['Partition Tolerance', 'Scalability', 'Big Data', 'Cassandra']
+        )
+      end
     end
   end
 
